@@ -1,10 +1,9 @@
 const Vue = require('vue')
 
-const messageComponent = Vue.component('my-message', {
-    props: ['message'],
-    template: '<div>{{ message }}</div>'
-})
 const app = new Vue({
     el: '#container',
-    template: '<my-message message="Hello World" />'
+    template: '<message message="Hello World" />',
+    components: {
+        message: require('./components/message')
+    }
 })
