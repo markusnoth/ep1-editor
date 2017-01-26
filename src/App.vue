@@ -1,12 +1,13 @@
 <template>
-    <message message="Hello World" />
+    <Message message="Hello World" />
 </template>
 
 <script>
-var message = require('./components/message')
-module.exports = {
-    components: { message }
-}
+    import Message from './components/Message'
+
+    export default {
+        components: { Message }
+    }
 </script>
 
 <style>
