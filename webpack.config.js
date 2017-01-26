@@ -3,7 +3,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const config = {
     entry: {
-        app: './src/app.js'
+        app: './src/main.js'
     },
     output: {
         path: 'dist',
@@ -37,7 +37,8 @@ if (process.env.NODE_ENV === 'production') {
             compress: {
                 warnings: false
             }
-        })
+        }),
+        new webpack.optimize.OccurrenceOrderPlugin()
     ])
 }
 
