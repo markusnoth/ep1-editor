@@ -4,7 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "webpack",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "cross-env NODE_ENV=\"production\" webpack -p",
+    "dev": "webpack-dev-server --hot --inline --no-info",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,8 +25,13 @@
     "vue": "^2.1.10"
   },
   "devDependencies": {
+    "cross-env": "^3.1.4",
+    "css-loader": "^0.26.1",
+    "html-webpack-plugin": "^2.26.0",
+    "rimraf": "^2.5.4",
     "vue-loader": "^10.0.3",
     "vue-template-compiler": "^2.1.10",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
   }
 }

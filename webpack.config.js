@@ -1,10 +1,12 @@
-module.exports = {
+var webpack = require('webpack')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+
+const config = {
     entry: {
         app: './src/app.js'
     },
     output: {
-        path: 'assets',
-        publicPath: 'assets',
+        path: 'dist',
         filename: '[name].js'
     },
     resolve: {
@@ -20,5 +22,23 @@ module.exports = {
                 loader: 'vue'
             }
         ]
-    }
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: 'index.html'
+        })
+    ]
 }
+
+if (process.env.NODE_ENV === 'production') {
+    config.plugins = config.plugins.concat([
+        new webpack.EnvironmentPlugin(["NODE_ENV"]),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        })
+    ])
+}
+
+module.exports = config
