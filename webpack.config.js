@@ -1,5 +1,6 @@
-var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 const config = {
     entry: {
@@ -38,6 +39,7 @@ const config = {
 if (process.env.NODE_ENV === 'production') {
     config.plugins = config.plugins.concat([
         new webpack.EnvironmentPlugin(["NODE_ENV"]),
+        new ExtractTextPlugin('styles.css'),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
@@ -45,6 +47,11 @@ if (process.env.NODE_ENV === 'production') {
         }),
         new webpack.optimize.OccurrenceOrderPlugin()
     ])
+    config.vue = {
+        loaders: {
+            css: ExtractTextPlugin.extract('css')
+        }
+    }
 }
 
 module.exports = config

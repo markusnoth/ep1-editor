@@ -11,5 +11,10 @@
 </script>
 
 <style>
-
+    body {
+        margin: 50px;
+        background-color: #222;
+        color: #eee;
+        font-family:Verdana, Geneva, Tahoma, sans-serif;
+    }
 </style>
