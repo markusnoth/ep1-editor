@@ -1,11 +1,13 @@
 <template>
-    <Message message="Hello World" />
+    <Message v-bind:message="message" />
 </template>
 
 <script>
-    import Message from './components/Message'
+    import Message from './Message'
+    import { mapState } from 'vuex'
 
     export default {
+        computed: mapState(['message']),
         components: { Message }
     }
 </script>
