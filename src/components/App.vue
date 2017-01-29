@@ -18,5 +18,6 @@
         background-color: #222;
         color: #eee;
         font-family:Verdana, Geneva, Tahoma, sans-serif;
+        max-width: 800px;
     }
 </style>
