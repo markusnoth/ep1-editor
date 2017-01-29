@@ -2,16 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import App from './components/App'
-import { loadEp1 } from './ep1Provider'
+import { loadEp1 } from './ep1-provider'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        data:'asdf'
+        data: []
     },
     mutations: {
         setData(state, data) {
+            if(typeof data === 'string') {
+                data = data.split('').map((c, i) => data.charCodeAt(i))
+            }
             state.data = data
         }
     },
