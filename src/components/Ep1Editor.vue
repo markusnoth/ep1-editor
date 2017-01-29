@@ -1,11 +1,9 @@
 <template>
     <div class="container">
         <div v-if="teletextPage">
-            <div v-for="row in teletextPage">
-                <div class="row">
-                    <div v-for="col in row">
-                        <span v-if="isTextContent(col)">{{ col.content }}</span>
-                    </div>
+            <div class="row" v-for="row in teletextPage">
+                <div :style="getStyle(col)" v-for="col in row">
+                    <span v-if="getContent(col)" v-html="getContent(col)"></span>
                 </div>
             </div>
         </div>
@@ -29,7 +27,11 @@
             }
         },
         methods: {
-            isTextContent: (data) => data.graphicsMode === GRAPHIC_MODES.Off
+            getContent: (data) => (data.graphicsMode === GRAPHIC_MODES.Off) ? data.content.replace(' ', '&nbsp;') : '&nbsp;',
+            getStyle: (data) => ({
+                backgroundColor: data.bgColor,
+                color: data.fgColor
+            })
         }
     }
 </script>
@@ -49,6 +51,7 @@
     }
     .row div {
         display: inline-block;
+        text-align: center;
         width: 2.5%;
     }
 </style>
