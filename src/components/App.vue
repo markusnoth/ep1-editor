@@ -1,14 +1,14 @@
 <template>
-    <Message v-bind:message="message" />
+    <Ep1Editor :data="data" />
 </template>
 
 <script>
-    import Message from './Message'
+    import Ep1Editor from './Ep1Editor'
     import { mapState } from 'vuex'
 
     export default {
-        computed: mapState(['message']),
-        components: { Message }
+        computed: mapState(['data']),
+        components: { Ep1Editor }
     }
 </script>
 
