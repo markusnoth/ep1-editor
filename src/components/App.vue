@@ -7,7 +7,9 @@
     import { mapState } from 'vuex'
 
     export default {
-        computed: mapState(['data']),
+        computed: mapState({
+            data: state => state.data.length ? state.data : null
+        }),
         components: { Ep1Editor }
     }
 </script>
