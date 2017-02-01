@@ -1,5 +1,5 @@
 
-import { EP1_FILE_COLS, EP1_CODES, CHAR_TRANSLATIONS } from './constants'
+import { EP1_CODES, CHAR_TRANSLATIONS } from './constants'
 
 export function getLang(data) {
     return data[45] != 0x20 ? String.fromCharCode(data[45]) : 'D'
@@ -9,7 +9,7 @@ export function getBytes(data, row, col, length) {
     if (!length && typeof col === 'undefined') {
         length = 40
     }
-    var i = 6 + row * EP1_FILE_COLS + (col || 0)
+    var i = 6 + row * 40 + (col || 0)
     return length && length > 1 ? data.slice(i, i + length) : data[i]
 }
 

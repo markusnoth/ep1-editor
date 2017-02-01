@@ -1,4 +1,4 @@
-﻿import { EP1_FILE_ROWS, EP1_FILE_COLS, EP1_CODES, EP1_COLORS, GRAPHIC_MODES } from './constants'
+﻿import { EP1_CODES, EP1_COLORS, GRAPHIC_MODES } from './constants'
 import { getBytes, getChar, isDoubleHeightLine, getLang } from './helper'
 
 export default function (ep1File) {
@@ -7,7 +7,7 @@ export default function (ep1File) {
 
 	var data = []
 	var doubleHeight = false
-	for (var row = 1; row <= EP1_FILE_ROWS; row++) {
+	for (var row = 1; row <= 23; row++) {
 		var rowData = []
 		// reset flags for each line
 		var graphicsMode = GRAPHIC_MODES.Off
@@ -22,7 +22,7 @@ export default function (ep1File) {
 		if (doubleHeight) {
 			doubleHeight = false
 		} else {
-			for (var col = 0; col < EP1_FILE_COLS; col++) {
+			for (var col = 0; col < 40; col++) {
 				var currentByte = getBytes(ep1File, row, col)
 				var isCode = currentByte < 32
 				var content
@@ -68,7 +68,7 @@ export default function (ep1File) {
 					// change background color
 					if (ep1Code == EP1_CODES.NewBackground || ep1Code == EP1_CODES.BlackBackground) {
 						bgColor = ep1Code == EP1_CODES.BlackBackground ? EP1_COLORS[0] : fgColor
-						var rowStart = 46 + row * EP1_FILE_COLS
+						var rowStart = 46 + row * 40
 						rowData[col] = { bgColor, fgColor, blink, doubleHeight: isDoubleHeightLine(getBytes(ep1File, row)) }
 					}
 

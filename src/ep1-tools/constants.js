@@ -1,6 +1,3 @@
-export const EP1_FILE_ROWS = 23
-export const EP1_FILE_COLS = 40
-
 export const EP1_CODES = {
     AlphaBlack: 0x00,
     AlphaRed: 0x01,

@@ -1,4 +1,4 @@
-import { EP1_CODES, EP1_FILE_ROWS, EP1_FILE_COLS, EP1_COLORS, GRAPHIC_MODES } from './constants'
+import { EP1_CODES, EP1_COLORS, GRAPHIC_MODES } from './constants'
 import { getChar } from './constants'
 
 export default class {
@@ -8,7 +8,7 @@ export default class {
 
     parse(ep1File, showBlink) {
         var doubleHeight = false
-        for (var row = 1; row < EP1_FILE_ROWS; row++) {
+        for (var row = 1; row < 23; row++) {
             {
                 // reset flags for each line
                 var graphicsMode = GRAPHIC_MODES.Off
@@ -22,7 +22,7 @@ export default class {
                 if (doubleHeight) {
                     doubleHeight = false
                 } else {
-                    for (var col = 0; col <= EP1_FILE_COLS; col++) {
+                    for (var col = 0; col <= 40; col++) {
                         {
                             var currentByte = ep1File.getBytes(row, col)
                             var isCode = currentByte < 32
@@ -69,7 +69,7 @@ export default class {
                                 // change background color
                                 if (ep1Code == EP1_CODES.NewBackground || ep1Code == EP1_CODES.BlackBackground) {
                                     var bgColor = ep1Code == EP1_CODES.BlackBackground ? EP1_COLORS[0] : fgColor
-                                    var rowStart = 46 + row * EP1_FILE_COLS
+                                    var rowStart = 46 + row * 40
                                     var isDoubleHeightLine = false
                                     this.handler.changeBackground(row - 1, col, bgColor, ep1File.isDoubleHeightLine(row))
                                 }

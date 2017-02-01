@@ -1,11 +1,11 @@
-import { EP1_FILE_ROWS, EP1_FILE_COLS, GRAPHIC_MODES } from './constants'
+import { GRAPHIC_MODES } from './constants'
 import { ep1ToRgbColor } from './helper'
 
 export default class CanvasRenderer {
     constructor(canvas) {
         this.canvas = canvas
-        this.rowHeight = canvas.height / EP1_FILE_ROWS
-        this.colWidth = canvas.width / EP1_FILE_COLS
+        this.rowHeight = canvas.height / 23
+        this.colWidth = canvas.width / 40
 
         this.context = canvas.getContext('2d')
         this.context.font = this.rowHeight + 'px sans-serif'
