@@ -33,7 +33,9 @@
             }
         },
         methods: {
-            getContent: (data) => (data.graphicsMode === GRAPHIC_MODES.Off) ? data.content.replace(' ', '&nbsp;') : '&nbsp;',
+            getContent (data) {
+                return data.content && !data.graphicsMode ? data.content.replace(' ', '&nbsp;') : '&nbsp;'
+            },
             getClass (data, rowIdx, colIdx) {
                 return {
                     [data.fgColor]: data.fgColor,

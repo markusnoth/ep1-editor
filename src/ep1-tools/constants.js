@@ -35,12 +35,6 @@ export const EP1_CODES = {
     Blob: 0x7F
 }
 
-export const GRAPHIC_MODES = {
-	Off: 0,
-	Contiguous: 1,
-	Seperated: 2
-}
-
 export const CHAR_TRANSLATIONS = {
 	0x23: { 'D': '#', 'F': 'é', 'I': '£', 'E': '£' },
 	0x24: { 'D': '$', 'F': 'ï', 'I': '$', 'E': '$' },

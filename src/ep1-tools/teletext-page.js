@@ -1,5 +1,11 @@
-﻿import { EP1_CODES, EP1_COLORS, GRAPHIC_MODES } from './constants'
+﻿import { EP1_CODES, EP1_COLORS } from './constants'
 import { getBytes, getChar, isDoubleHeightLine, getLang } from './helper'
+
+const DEFAULT_COLOR = EP1_COLORS[7] // white
+const DEFAULT_BG_COLOR = EP1_COLORS[0] // black
+
+const CONTIGUOUS_GRAPHICS = 'CONTIGUOUS_GRAPHICS'
+const SEPERATED_GRAPHICS = 'SEPERATED_GRAPHICS'
 
 export default function (ep1File) {
 	if (!ep1File || ep1File.length !== 1008)
@@ -10,17 +16,17 @@ export default function (ep1File) {
 	for (var row = 1; row <= 23; row++) {
 		var rowData = []
 		// reset flags for each line
-		var graphicsMode = GRAPHIC_MODES.Off
+		var graphicsMode = false
 		var holdGraphics = false
-		var fgColor = EP1_COLORS[7]; // alpha white
-		var bgColor = EP1_COLORS[0]
-		var lastGraphic = null
+		var fgColor = DEFAULT_COLOR
+		var bgColor = DEFAULT_BG_COLOR
+		var lastGraphic = false
 		var blink = false
 		var normalHeight = true
-		var conceal = false; // TODO: implement conceal
+		var conceal = false // TODO: implement conceal
 
 		if (doubleHeight) {
-			doubleHeight = false
+			doubleHeight = false // ignore whole line if the line before was a double height line (and reset flag)
 		} else {
 			for (var col = 0; col < 40; col++) {
 				var currentByte = getBytes(ep1File, row, col)
@@ -38,26 +44,33 @@ export default function (ep1File) {
 					}
 
 					// repeat last graphics if hold graphics mode is on (not if new background -> this has priority!)
-					if (graphicsMode != GRAPHIC_MODES.Off && ep1Code != EP1_CODES.NewBackground && holdGraphics && lastGraphic) {
-						rowData[col] = { bgColor, fgColor, lastGraphic, blink, doubleHeight: doubleHeight && !normalHeight, graphicsMode }
+					if (graphicsMode && ep1Code != EP1_CODES.NewBackground && holdGraphics && lastGraphic) {
+						rowData[col] = {
+							graphicContent: lastGraphic,
+							fgColor,
+							bgColor,
+							blink: blink && blink,
+							doubleHeight: doubleHeight && !normalHeight,
+							seperated: graphicsMode === SEPERATED_GRAPHICS
+						}
 					}
 
 					// change foreground color
 					if (ep1Code < 8) {
-						graphicsMode = GRAPHIC_MODES.Off
+						graphicsMode = false
 						fgColor = EP1_COLORS[ep1Code]
 					}
 					// change to graphics mode
 					if (ep1Code >= 0x10 && ep1Code <= 0x17) {
-						if (graphicsMode == GRAPHIC_MODES.Off)
-							graphicsMode = GRAPHIC_MODES.Contiguous
+						if (!graphicsMode)
+							graphicsMode = CONTIGUOUS_GRAPHICS
 						fgColor = EP1_COLORS[ep1Code & 7]
 					}
 					// set seperated/contiguous graphics mode
 					if (ep1Code == EP1_CODES.SeperatedGraphics)
-						graphicsMode = GRAPHIC_MODES.Seperated
+						graphicsMode = SEPERATED_GRAPHICS
 					else if (ep1Code == EP1_CODES.ContiguousGraphics)
-						graphicsMode = GRAPHIC_MODES.Contiguous
+						graphicsMode = CONTIGUOUS_GRAPHICS
 
 					// set blink on/off
 					if (ep1Code == EP1_CODES.Blink)
@@ -67,9 +80,13 @@ export default function (ep1File) {
 
 					// change background color
 					if (ep1Code == EP1_CODES.NewBackground || ep1Code == EP1_CODES.BlackBackground) {
-						bgColor = ep1Code == EP1_CODES.BlackBackground ? EP1_COLORS[0] : fgColor
-						var rowStart = 46 + row * 40
-						rowData[col] = { bgColor, fgColor, blink, doubleHeight: isDoubleHeightLine(getBytes(ep1File, row)) }
+						bgColor = ep1Code == EP1_CODES.BlackBackground ? DEFAULT_BG_COLOR : fgColor
+						rowData[col] = {
+							bgColor,
+							fgColor,
+							blink,
+							doubleHeight: isDoubleHeightLine(getBytes(ep1File, row))
+						}
 					}
 
 					// switch to/from double height mode
@@ -81,10 +98,15 @@ export default function (ep1File) {
 					}
 
 					if (!rowData[col]) {
-						rowData[col] = { bgColor, fgColor, blink, doubleHeight: doubleHeight && !normalHeight }
+						rowData[col] = {
+							bgColor,
+							fgColor,
+							blink,
+							doubleHeight: doubleHeight && !normalHeight
+						}
 					}
 				} else {
-					if (graphicsMode != GRAPHIC_MODES.Off && !((currentByte & 0x40) > 0 && (currentByte & 0x20) == 0) || currentByte == 0x7F) // special case for 0x7F always use graphics (blob)
+					if (graphicsMode && !((currentByte & 0x40) > 0 && (currentByte & 0x20) == 0) || currentByte == 0x7F) // special case for 0x7F always use graphics (blob)
 					{
 						lastGraphic = currentByte
 						content = currentByte
@@ -92,7 +114,14 @@ export default function (ep1File) {
 						var charToOutput = getChar(currentByte, getLang(ep1File))
 						content = charToOutput
 					}
-					rowData[col] = { bgColor, fgColor, content, blink, doubleHeight: doubleHeight && !normalHeight, graphicsMode }
+					rowData[col] = {
+						content,
+						bgColor,
+						fgColor,
+						blink,
+						doubleHeight: doubleHeight && !normalHeight,
+						graphicsMode
+					}
 				}
 			}
 		}
