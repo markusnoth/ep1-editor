@@ -12,7 +12,7 @@ const store = new Vuex.Store({
     },
     mutations: {
         setData(state, data) {
-            if(typeof data === 'string') {
+            if (typeof data === 'string') {
                 data = data.split('').map((c, i) => data.charCodeAt(i))
             }
             state.data = data
@@ -25,6 +25,14 @@ const store = new Vuex.Store({
             })
         }
     }
+})
+
+Vue.directive('select', (e) => {
+    console.log(e)
+    Vue.nextTick(() => {
+        e.focus()
+        e.select()
+    })
 })
 
 new Vue({

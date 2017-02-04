@@ -1,8 +1,10 @@
 <template>
-    <div v-if="teletextPage" class="ep1-editor">
+    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @focus="onFocus" @blur="onBlur">
         <div class="row" v-for="(row, rowIdx) in teletextPage">
             <div v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)" class="col" :class="getClass(col, rowIdx, colIdx)">
-                <span v-if="getContent(col)" v-html="getContent(col)"></span>
+                <input v-if="selection && selection.row == rowIdx && selection.col == colIdx" :value="getContent(col)" ref="input" v-select />
+                <span v-else-if="getContent(col)" v-html="getContent(col)"></span>
+                <span v-else>&nbsp;</span>
             </div>
         </div>
         <div style="margin-top: 10px; text-align: right">{{ selection }}</div>
@@ -14,6 +16,7 @@
     import teletextPage from '../ep1-tools/teletext-page'
 
     export default {
+        name: 'Ep1Editor',
         data() {
             return {
                 selection: null
@@ -34,7 +37,7 @@
         },
         methods: {
             getContent (data) {
-                return data.content && !data.graphicsMode ? data.content.replace(' ', '&nbsp;') : '&nbsp;'
+                return data.content && !data.graphicsMode ? data.content.replace(' ', '') : null
             },
             getClass (data, rowIdx, colIdx) {
                 return {
@@ -48,6 +51,13 @@
             },
             onKeyup () {
                 console.log('keyup', arguments)
+            },
+            onFocus() {
+                this.selection = this.lastSelection
+            },
+            onBlur() {
+                this.lastSelection = this.selection
+                //this.selection = null
             }
         }
     }
@@ -87,21 +97,28 @@
         font-family: Courier New, Courier, monospace;
         font-weight: bold;
         font-size: 0.9em;
-    }
-    .row {
-        height: percentage(1/23);
-        .col {
-            box-sizing: border-box;
-            display: inline-block;
-            text-align: center;
-            width: percentage(1/40);
-            border: 1px solid transparent;
-            cursor: default;
-            &:hover {
-                filter: invert(20%);
-            }
-            &.selected {
-                filter: invert(100%);
+        outline: none;
+        .row {
+            height: percentage(1/23);
+            .col {
+                box-sizing: border-box;
+                display: inline-block;
+                text-align: center;
+                width: percentage(1/40);
+                border: 1px solid transparent;
+                cursor: default;
+                &:hover {
+                    filter: invert(20%);
+                }
+                &.selected {
+                    filter: invert(100%);
+                }
+                input {
+                    background-color: transparent;
+                    border: none;
+                    text-align: center;
+                    width: 100%;
+                }
             }
         }
     }
