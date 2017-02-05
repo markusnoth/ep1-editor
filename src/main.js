@@ -27,14 +27,6 @@ const store = new Vuex.Store({
     }
 })
 
-Vue.directive('select', (e) => {
-    console.log(e)
-    Vue.nextTick(() => {
-        e.focus()
-        e.select()
-    })
-})
-
 new Vue({
     el: '#app',
     template: '<App/>',

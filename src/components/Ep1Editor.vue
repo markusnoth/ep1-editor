@@ -1,5 +1,5 @@
 <template>
-    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @focus="onFocus" @blur="onBlur">
+    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @focus="onFocus" @blur="onBlur" @keyup="onKeyup">
         <div class="row" v-for="(row, rowIdx) in teletextPage">
             <div v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)" class="col" :class="getClass(col, rowIdx, colIdx)">
                 <input v-if="selection && selection.row == rowIdx && selection.col == colIdx" :value="getContent(col)" ref="input" v-select />
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+    import Vue from 'vue'
     import { GRAPHIC_MODES } from '../ep1-tools/constants'
     import teletextPage from '../ep1-tools/teletext-page'
 
@@ -23,6 +24,14 @@
             }
         },
         props: ['data'],
+        directives: {
+            select(e) {
+                Vue.nextTick(() => {
+                    e.focus()
+                    e.select()
+                })
+            }
+        },
         computed: {
             teletextPage() {
                 if(this.data && this.data.length) {
@@ -49,15 +58,19 @@
             select (row, col) {
                 this.selection = { row, col }
             },
-            onKeyup () {
-                console.log('keyup', arguments)
+            onKeyup (e) {
+                const { selection } = this
+                if(e.keyCode === 37 && selection.col > 0) { selection.col-- }
+                if(e.keyCode === 38 && selection.row > 0) { this.selection.row-- }
+                if(e.keyCode === 39 && selection.col < 39) { this.selection.col++ }
+                if(e.keyCode === 40 && selection.row < 22) { this.selection.row++ }
             },
             onFocus() {
                 this.selection = this.lastSelection
             },
             onBlur() {
                 this.lastSelection = this.selection
-                //this.selection = null
+                this.selection = null
             }
         }
     }
@@ -118,6 +131,7 @@
                     border: none;
                     text-align: center;
                     width: 100%;
+                    outline: none;
                 }
             }
         }
