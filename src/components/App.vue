@@ -1,16 +1,16 @@
 <template>
-    <Ep1Editor :data="data" />
+    <Editor :data="data" />
 </template>
 
 <script>
-    import Ep1Editor from './Ep1Editor'
+    import Editor from './Editor'
     import { mapState } from 'vuex'
 
     export default {
         computed: mapState({
             data: state => state.data.length ? state.data : null
         }),
-        components: { Ep1Editor }
+        components: { Editor }
     }
 </script>
 

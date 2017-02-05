@@ -1,10 +1,8 @@
 <template>
     <div v-if="teletextPage" class="ep1-editor" tabindex="0" @focus="onFocus" @blur="onBlur" @keyup="onKeyup">
         <div class="row" v-for="(row, rowIdx) in teletextPage">
-            <div v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)" class="col" :class="getClass(col, rowIdx, colIdx)">
-                <input v-if="isSelected(rowIdx, colIdx)" :value="getContent(col)" v-select @input="e => onInput(e, rowIdx, colIdx)" />
-                <span v-else-if="getContent(col)" v-html="getContent(col)"></span>
-                <span v-else>&nbsp;</span>
+            <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
+                <EditorItem v-model="col.content" :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" @input="value => onInput(rowIdx, colIdx, value)" />
             </div>
         </div>
         <div style="margin-top: 10px; text-align: right">{{ selection }}</div>
@@ -12,25 +10,19 @@
 </template>
 
 <script>
-    import Vue from 'vue'
-    import { GRAPHIC_MODES } from '../ep1-tools/constants'
     import teletextPage from '../ep1-tools/teletext-page'
+    import EditorItem from './EditorItem'
 
     export default {
-        name: 'Ep1Editor',
+        name: 'Editor',
         data() {
             return {
                 selection: null
             }
         },
         props: ['data'],
-        directives: {
-            select(e) {
-                Vue.nextTick(() => {
-                    e.focus()
-                    e.select()
-                })
-            }
+        components: {
+            EditorItem
         },
         computed: {
             teletextPage() {
@@ -47,16 +39,6 @@
         methods: {
             isSelected(row, col) {
                 return this.selection && this.selection.row == row && this.selection.col == col
-            },
-            getContent (data) {
-                return data.content && !data.graphicsMode ? data.content.replace(' ', '') : null
-            },
-            getClass (data, rowIdx, colIdx) {
-                return {
-                    [data.fgColor]: data.fgColor,
-                    [`bg-${data.bgColor}`]: data.bgColor,
-                    selected: this.selection && this.selection.row === rowIdx && this.selection.col === colIdx
-                }
             },
             select (row, col) {
                 this.selection = { row, col }
@@ -75,10 +57,8 @@
                 this.lastSelection = this.selection
                 this.selection = null
             },
-            onInput(e, row, col) {
-                e.target.focus()
-                e.target.select()
-                console.log(e.target, e.key, row, col)
+            onInput(row, col, value) {
+                console.log(row, col, value)
             }
         }
     }
@@ -125,23 +105,24 @@
                 display: inline-block;
                 text-align: center;
                 width: percentage(1/40);
-                border: 1px solid transparent;
                 cursor: default;
                 &:hover {
                     filter: invert(20%);
                 }
-                &.selected {
-                    filter: invert(100%);
-                }
-                input {
-                    background-color: transparent;
-                    border: none;
-                    text-align: center;
-                    width: 100%;
-                    outline: none;
-                    font-weight: bold;
-                    font-size: 1em;
-                    padding: 0;
+                div.selected {
+                    /*filter: invert(100%);*/
+                    input {
+                        width: 100%;
+                        padding: 0;
+                        background-color: transparent;
+                        border: none;
+                        outline: none;
+                        color: inherit;
+                        text-align: inherit;
+                        font-family: inherit;
+                        font-weight: inherit;
+                        font-size: inherit;
+                    }
                 }
             }
         }
