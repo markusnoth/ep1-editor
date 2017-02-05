@@ -107,7 +107,6 @@
         min-width: 600px;
         min-height: 400px;
         color: #fff;
-        font-family: Courier New, Courier, monospace;
         font-weight: bold;
         font-size: 0.9em;
         outline: none;
@@ -132,6 +131,9 @@
                     text-align: center;
                     width: 100%;
                     outline: none;
+                    font-weight: bold;
+                    font-size: 1em;
+                    padding: 0;
                 }
             }
         }
