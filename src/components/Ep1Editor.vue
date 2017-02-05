@@ -2,7 +2,7 @@
     <div v-if="teletextPage" class="ep1-editor" tabindex="0" @focus="onFocus" @blur="onBlur" @keyup="onKeyup">
         <div class="row" v-for="(row, rowIdx) in teletextPage">
             <div v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)" class="col" :class="getClass(col, rowIdx, colIdx)">
-                <input v-if="isSelected(rowIdx, colIdx)" :value="getContent(col)" v-select @keydown="e => onInput(e, row, col)" />
+                <input v-if="isSelected(rowIdx, colIdx)" :value="getContent(col)" v-select @input="e => onInput(e, rowIdx, colIdx)" />
                 <span v-else-if="getContent(col)" v-html="getContent(col)"></span>
                 <span v-else>&nbsp;</span>
             </div>
@@ -76,7 +76,9 @@
                 this.selection = null
             },
             onInput(e, row, col) {
-                console.log(e.key, row, col)
+                e.target.focus()
+                e.target.select()
+                console.log(e.target, e.key, row, col)
             }
         }
     }
