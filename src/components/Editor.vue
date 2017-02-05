@@ -107,10 +107,10 @@
                 width: percentage(1/40);
                 cursor: default;
                 &:hover {
-                    filter: invert(20%);
+                    filter: invert(10%);
                 }
                 div.selected {
-                    /*filter: invert(100%);*/
+                    filter: invert(20%);
                     input {
                         width: 100%;
                         padding: 0;
