@@ -20,8 +20,8 @@ const store = new Vuex.Store({
     },
     actions: {
         loadData(context) {
-            return loadEp1().then(response => {
-                context.commit('setData', response.data)
+            return loadEp1().then(data => {
+                context.commit('setData', data)
             })
         }
     }
