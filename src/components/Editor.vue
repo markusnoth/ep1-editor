@@ -1,5 +1,5 @@
 <template>
-    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @focus="onFocus" @blur="onBlur" @keyup="onKeyup">
+    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keyup="onKeyup">
         <div class="row" v-for="(row, rowIdx) in teletextPage">
             <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
                 <EditorItem v-model="col.content" :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" @input="value => onInput(rowIdx, colIdx, value)" />
@@ -20,15 +20,15 @@
                 selection: null
             }
         },
-        props: ['data'],
+        props: ['value'],
         components: {
             EditorItem
         },
         computed: {
             teletextPage() {
-                if(this.data && this.data.length) {
+                if(this.value && this.value.length) {
                     try {
-                        return teletextPage(this.data)
+                        return teletextPage(this.value)
                     } catch (err) {
                         console.error(err.message || err)
                     }
@@ -41,6 +41,7 @@
                 return this.selection && this.selection.row == row && this.selection.col == col
             },
             select (row, col) {
+                console.log('select', row, col, this.selection)
                 this.selection = { row, col }
             },
             onKeyup (e) {
@@ -50,15 +51,15 @@
                 if(e.keyCode === 39 && selection.col < 39) { this.selection.col++ }
                 if(e.keyCode === 40 && selection.row < 22) { this.selection.row++ }
             },
-            onFocus() {
-                this.selection = this.lastSelection
-            },
-            onBlur() {
-                this.lastSelection = this.selection
-                this.selection = null
-            },
             onInput(row, col, value) {
-                console.log(row, col, value)
+                const newValue = this.value.slice()
+                const index = 46 + row * 40 + col
+                if(typeof value === 'string') {
+                    // TODO: translate to correct char
+                    value = value.charCodeAt(0)
+                }
+                newValue.splice(index, 1, value)
+                this.$emit('input', newValue)
             }
         }
     }

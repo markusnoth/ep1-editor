@@ -1,14 +1,17 @@
 <template>
-    <Editor :data="data" />
+    <Editor :value="ep1Data" @input="onEp1Change" />
 </template>
 
 <script>
     import Editor from './Editor'
-    import { mapState } from 'vuex'
+    import { mapState, mapMutations } from 'vuex'
 
     export default {
         computed: mapState({
-            data: state => state.data.length ? state.data : null
+            ep1Data: state => state.data.length ? state.data : null
+        }),
+        methods: mapMutations({
+            onEp1Change: 'setData'
         }),
         components: { Editor }
     }
