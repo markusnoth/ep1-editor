@@ -5,7 +5,9 @@
                 <EditorItem v-model="col.content" :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" @input="value => onInput(rowIdx, colIdx, value)" />
             </div>
         </div>
-        <div style="margin-top: 10px; text-align: right">{{ selection }}</div>
+        <div class="status-bar">
+            <span v-if="selection" style="float: right;">{{ selection.row }}/{{ selection.col }}</span>
+        </div>
     </div>
 </template>
 
@@ -127,5 +129,10 @@
                 }
             }
         }
+    }
+    .status-bar {
+        margin-top: 10px;
+        text-align: right;
+        font-size: 0.6em;
     }
 </style>
