@@ -1,12 +1,14 @@
 <template>
     <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keyup="onKeyup">
-        <div class="row" v-for="(row, rowIdx) in teletextPage">
-            <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
-                <EditorItem v-model="col.content" :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" @input="value => onInput(rowIdx, colIdx, value)" />
+        <div>
+            <div class="row" v-for="(row, rowIdx) in teletextPage">
+                <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
+                    <EditorItem v-model="col.content" :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" @input="value => onInput(rowIdx, colIdx, value)" />
+                </div>
             </div>
         </div>
         <div class="status-bar">
-            <span v-if="selection" style="float: right;">{{ selection.row }}/{{ selection.col }}</span>
+            <span v-if="selection">[{{ selection.row }}/{{ selection.col }}]</span>
         </div>
     </div>
 </template>
@@ -43,8 +45,8 @@
                 return this.selection && this.selection.row == row && this.selection.col == col
             },
             select (row, col) {
-                console.log('select', row, col, this.selection)
                 this.selection = { row, col }
+                this.$emit('selectionChanged', this.selection)
             },
             onKeyup (e) {
                 const { selection } = this
@@ -62,6 +64,7 @@
                 }
                 newValue.splice(index, 1, value)
                 this.$emit('input', newValue)
+                this.selection.col++
             }
         }
     }
@@ -129,10 +132,5 @@
                 }
             }
         }
-    }
-    .status-bar {
-        margin-top: 10px;
-        text-align: right;
-        font-size: 0.6em;
     }
 </style>

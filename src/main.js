@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        data: []
+        data: null
     },
     mutations: {
         setData(state, data) {
