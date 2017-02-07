@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="tool-bar">
-            ...
+            
         </div>
         <Editor :value="data" @input="updateData" />
     </div>

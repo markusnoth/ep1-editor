@@ -7,7 +7,6 @@
 
 <script>
     import Vue from 'vue'
-    import { GRAPHIC_MODES } from '../ep1-tools/constants'
 
     export default {
         name: 'EditorItem',
