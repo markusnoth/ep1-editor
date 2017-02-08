@@ -1,3 +1,4 @@
+require('core-js')
 import Vue from 'vue'
 import Vuex from 'vuex'
 

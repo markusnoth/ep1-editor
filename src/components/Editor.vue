@@ -1,5 +1,5 @@
 <template>
-    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keyup="onKeyup">
+    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keydown="onKey">
         <div class="editor-content">
             <div class="row" v-for="(row, rowIdx) in teletextPage">
                 <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
@@ -45,12 +45,18 @@
                 this.selection = { row, col }
                 this.$emit('selectionChanged', this.selection)
             },
-            onKeyup (e) {
+            onKey (e) {
                 const { selection } = this
-                if(e.keyCode === 37 && selection.col > 0) { selection.col-- }
-                if(e.keyCode === 38 && selection.row > 0) { this.selection.row-- }
-                if(e.keyCode === 39 && selection.col < 39) { this.selection.col++ }
-                if(e.keyCode === 40 && selection.row < 22) { this.selection.row++ }
+                const keyHandlers = {
+                    37: () => { if(selection.col > 0) { this.selection.col-- } },
+                    38: () => { if(selection.row > 0) { this.selection.row-- } },
+                    39: () => { if( selection.col < 39) { this.selection.col++ } },
+                    40: () => { if( selection.row < 22) { this.selection.row++ } }
+                }
+                if(keyHandlers[e.keyCode]) {
+                    e.preventDefault()
+                    keyHandlers[e.keyCode]()
+                }
             },
             onInput(row, col, value) {
                 const newValue = this.value.slice()
