@@ -1,9 +1,10 @@
 <template>
     <div>
         <div class="tool-bar">
-            <PageLoader @pageLoaded="updateData" />
+            <PageLoader style="display: inline-block;" @pageLoaded="updateData" />
+            <label><input type="checkbox" v-model="displayCodes" /> Display Codes</label>
         </div>
-        <Editor :value="data" @input="updateData" @selectionChanged="setSelection" />
+        <Editor v-if="data" :value="data" @input="updateData" @selectionChanged="setSelection" :displayCodes="displayCodes" />
         <div class="status-bar">
             <span v-if="selection">[{{ selection.row + 1 }} : {{ selection.col }}]</span>
         </div>
@@ -16,7 +17,10 @@
     import { mapState, mapMutations } from 'vuex'
 
     export default {
-        data:() => ({ selection: null }),
+        data:() => ({ 
+            selection: null,
+            displayCodes: false
+        }),
         computed: mapState(['data']),
         methods: {
             ...mapMutations({

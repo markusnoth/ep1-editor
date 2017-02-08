@@ -11,23 +11,20 @@ const config = {
         filename: '[name].js'
     },
     resolve: {
-        extensions: ['', '.js', '.vue', '.json'],
+        extensions: ['','.js','.vue','.json','.css'],
         alias: {
             'vue$': 'vue/dist/vue.common.js'
         }
     },
     module: {
-        loaders: [
-            {
-                test: /\.vue$/,
-                loader: 'vue'
-            },
-            {
-                test: /\.js$/,
-                loader: 'babel',
-                exclude: /node_modules/
-            }
-        ]
+        loaders: [{
+            test: /\.vue$/,
+            loader: 'vue'
+        }, {
+            test: /\.js$/,
+            loader: 'babel',
+            exclude: /node_modules/
+        }]
     },
     plugins: [
         new HtmlWebpackPlugin({

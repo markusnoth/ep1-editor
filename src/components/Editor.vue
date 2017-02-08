@@ -2,9 +2,10 @@
     <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keydown="onKey" v-resized="onResize">
         <div class="editor-content">
             <div class="row" v-for="(row, rowIdx) in teletextPage">
-                <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
-                    <EditorItem v-model="col.content" :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" @input="value => onInput(rowIdx, colIdx, value)" />
-                </div>
+                <EditorItem class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)"
+                            v-model="col.content" :code="col.code"
+                            :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" :displayCode="displayCodes"
+                            @input="value => onInput(rowIdx, colIdx, value)" />
             </div>
         </div>
     </div>
@@ -17,12 +18,10 @@
 
     export default {
         name: 'Editor',
-        data() {
-            return {
-                selection: null
-            }
-        },
-        props: ['value'],
+        data: () => ({
+            selection: null
+        }),
+        props: ['value','displayCodes'],
         components: {
             EditorItem
         },

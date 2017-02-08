@@ -46,6 +46,7 @@ export default function (ep1File) {
 					// repeat last graphics if hold graphics mode is on (not if new background -> this has priority!)
 					if (graphicsMode && ep1Code != EP1_CODES.NewBackground && holdGraphics && lastGraphic) {
 						rowData[col] = {
+							code: currentByte,
 							graphicContent: lastGraphic,
 							fgColor,
 							bgColor,
@@ -82,6 +83,7 @@ export default function (ep1File) {
 					if (ep1Code == EP1_CODES.NewBackground || ep1Code == EP1_CODES.BlackBackground) {
 						bgColor = ep1Code == EP1_CODES.BlackBackground ? DEFAULT_BG_COLOR : fgColor
 						rowData[col] = {
+							code: currentByte,
 							bgColor,
 							fgColor,
 							blink,
@@ -99,6 +101,7 @@ export default function (ep1File) {
 
 					if (!rowData[col]) {
 						rowData[col] = {
+							code: currentByte,
 							bgColor,
 							fgColor,
 							blink,
@@ -115,6 +118,7 @@ export default function (ep1File) {
 						content = charToOutput
 					}
 					rowData[col] = {
+						code: currentByte,
 						content,
 						bgColor,
 						fgColor,
