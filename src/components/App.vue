@@ -36,7 +36,6 @@
         background-color: #d5d5cb;
         color: #333;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        max-width: 800px;
         .status-bar {
             margin-top: 10px;
             text-align: right;

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keydown="onKey">
+    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keydown="onKey" v-resized="onResize">
         <div class="editor-content">
             <div class="row" v-for="(row, rowIdx) in teletextPage">
                 <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+    import elementResizeEvent from 'element-resize-event'
     import teletextPage from '../ep1-tools/teletext-page'
     import EditorItem from './EditorItem'
 
@@ -35,6 +36,11 @@
                     }
                 }
                 return null
+            }
+        },
+        directives: {
+            resized(e, binding) {
+                elementResizeEvent(e, () => binding.value(e))
             }
         },
         methods: {
@@ -68,6 +74,10 @@
                 newValue.splice(index, 1, value)
                 this.$emit('input', newValue)
                 this.selection.col++
+            },
+            onResize(e) {
+                const rowSize = e.offsetHeight * 0.8 / 23
+                e.style.fontSize = rowSize + 'px'
             }
         }
     }
@@ -101,15 +111,20 @@
     .bg-white { background-color: $white }
 
     .ep1-editor {
-        min-width: 600px;
-        min-height: 400px;
+        width: 500px;
+        min-width: 300px;
+        height: 405px;
+        min-height: 200px;
+        resize: both;
+        overflow: auto;
+        outline: none;
+        border: 2px solid #999;
         background-color: #000;
         color: #fff;
         font-weight: bold;
-        font-size: 0.9em;
-        outline: none;
-        border: 2px solid #999;
+        font-family: courier, monospace;
         .editor-content {
+            height: 100%;
             .row {
                 height: percentage(1/23);
                 .col {
