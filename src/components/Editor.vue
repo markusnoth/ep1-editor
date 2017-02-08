@@ -1,14 +1,11 @@
 <template>
     <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keyup="onKeyup">
-        <div>
+        <div class="editor-content">
             <div class="row" v-for="(row, rowIdx) in teletextPage">
                 <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
                     <EditorItem v-model="col.content" :fgColor="col.fgColor" :bgColor="col.bgColor" :isSelected="isSelected(rowIdx, colIdx)" @input="value => onInput(rowIdx, colIdx, value)" />
                 </div>
             </div>
-        </div>
-        <div class="status-bar">
-            <span v-if="selection">[{{ selection.row }}/{{ selection.col }}]</span>
         </div>
     </div>
 </template>
@@ -100,34 +97,38 @@
     .ep1-editor {
         min-width: 600px;
         min-height: 400px;
+        background-color: #000;
         color: #fff;
         font-weight: bold;
         font-size: 0.9em;
         outline: none;
-        .row {
-            height: percentage(1/23);
-            .col {
-                box-sizing: border-box;
-                display: inline-block;
-                text-align: center;
-                width: percentage(1/40);
-                cursor: default;
-                &:hover {
-                    filter: invert(10%);
-                }
-                div.selected {
-                    filter: invert(20%);
-                    input {
-                        width: 100%;
-                        padding: 0;
-                        background-color: transparent;
-                        border: none;
-                        outline: none;
-                        color: inherit;
-                        text-align: inherit;
-                        font-family: inherit;
-                        font-weight: inherit;
-                        font-size: inherit;
+        border: 2px solid #999;
+        .editor-content {
+            .row {
+                height: percentage(1/23);
+                .col {
+                    box-sizing: border-box;
+                    display: inline-block;
+                    text-align: center;
+                    width: percentage(1/40);
+                    cursor: text;
+                    &:hover {
+                        filter: invert(10%);
+                    }
+                    div.selected {
+                        filter: invert(20%);
+                        input {
+                            width: 100%;
+                            padding: 0;
+                            background-color: transparent;
+                            border: none;
+                            outline: none;
+                            color: inherit;
+                            text-align: inherit;
+                            font-family: inherit;
+                            font-weight: inherit;
+                            font-size: inherit;
+                        }
                     }
                 }
             }
