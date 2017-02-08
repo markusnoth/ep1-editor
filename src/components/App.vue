@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="tool-bar">
-
+            <PageLoader @pageLoaded="updateData" />
         </div>
         <Editor :value="data" @input="updateData" @selectionChanged="setSelection" />
         <div class="status-bar">
@@ -12,6 +12,7 @@
 
 <script>
     import Editor from './Editor'
+    import PageLoader from './PageLoader'
     import { mapState, mapMutations } from 'vuex'
 
     export default {
@@ -25,7 +26,7 @@
                 this.selection = selection
             }
         },
-        components: { Editor }
+        components: { Editor, PageLoader }
     }
 
 </script>

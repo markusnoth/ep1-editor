@@ -3,7 +3,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import App from './components/App'
-import { loadEp1 } from './ep1-provider'
 
 Vue.use(Vuex)
 
@@ -18,13 +17,6 @@ const store = new Vuex.Store({
             }
             state.data = data
         }
-    },
-    actions: {
-        loadData(context) {
-            return loadEp1().then(data => {
-                context.commit('setData', data)
-            })
-        }
     }
 })
 
@@ -32,8 +24,5 @@ new Vue({
     el: '#app',
     template: '<App/>',
     store,
-    components: { App },
-    mounted() {
-        store.dispatch('loadData')
-    }
+    components: { App }
 })
