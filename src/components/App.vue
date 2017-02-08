@@ -33,10 +33,13 @@
 
 <style lang="sass">
     body {
-        margin: 50px;
+        margin: 20px 30px;
         background-color: #d5d5cb;
         color: #333;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
+        .tool-bar {
+            margin-bottom: 10px;
+        }
         .status-bar {
             margin-top: 10px;
             text-align: right;
