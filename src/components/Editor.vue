@@ -103,10 +103,11 @@
                 height: percentage(1/23);
                 .col {
                     position: relative;
+                    height: 100%;
+                    width: percentage(1/40);
                     box-sizing: border-box;
                     display: inline-block;
                     text-align: center;
-                    width: percentage(1/40);
                     cursor: text;
                     &:hover {
                         filter: invert(10%);

@@ -73,6 +73,7 @@ $white: #fff;
 
 .col {
     div {
+        height: 100%;
         input {
             width: 100%;
             padding: 0;
@@ -91,6 +92,7 @@ $white: #fff;
             font-size: 0.5em;
         }
         .graphic {
+            height: 100%;
             .block {
                 position: absolute;
                 width: 50%;
@@ -104,7 +106,6 @@ $white: #fff;
         }
     }
 }
-
 
 .black { 
     color: $black;
