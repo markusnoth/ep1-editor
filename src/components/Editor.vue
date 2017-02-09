@@ -1,6 +1,9 @@
 <template>
-    <div v-if="teletextPage" class="ep1-editor" tabindex="0" @keydown="onKey" v-resized="onResize">
-        <div class="editor-content">
+    <div v-if="teletextPage" class="editor" tabindex="0" @keydown="onKey" v-resized="onResize">
+        <div class="toolbar">
+            <button v-for="color in EP1_COLORS" @click="onColor(color)" :disabled="!selection" :title="color" :style="{color}">A</button>
+        </div>
+        <div class="content">
             <div class="row" v-for="(row, rowIdx) in teletextPage">
                 <div class="col" v-for="(col, colIdx) in row" @click="select(rowIdx, colIdx)">
                     <EditorItem v-model="col.content" :code="col.code"
@@ -14,7 +17,7 @@
 
 <script>
     import elementResizeEvent from 'element-resize-event'
-    import { parse, moveLine } from '../ep1-tools'
+    import { parse, moveLine, EP1_COLORS, EP1_CODES } from '../ep1-tools'
     import EditorItem from './EditorItem'
 
     export default {
@@ -22,7 +25,8 @@
         data() {
             return {
                 data: this.value,
-                selection: null
+                selection: null,
+                EP1_COLORS
             }
         },
         props: ['value','displayCodes'],
@@ -39,6 +43,9 @@
                     }
                 }
                 return null
+            },
+            selectionIndex() {
+                return this.selection && 46 + this.selection.row * 40 + this.selection.col
             }
         },
         directives: {
@@ -65,12 +72,13 @@
                         }
                     },
                     39: () => { if( selection.col < 39) { this.selection.col++ } },
-                    40: () => { 
+                    40: () => { // arrow down
                         if( selection.row < 22) { 
                             if(e.metaKey || e.ctrlKey) { moveLine(this.data, selection.row, 1, selection.col) }
                             this.selection.row++ 
                         }
-                    }
+                    },
+                    27: () => { this.selection = null } // esc
                 }
                 if(keyHandlers[e.keyCode]) {
                     e.preventDefault()
@@ -78,17 +86,22 @@
                 }
             },
             onInput(row, col, value) {
-                const index = 46 + row * 40 + col
                 if(typeof value === 'string') {
                     // TODO: translate to correct char
                     value = value.charCodeAt(0)
                 }
-                this.data.splice(index, 1, value)
+                this.data.splice(this.selectionIndex, 1, value)
                 this.selection.col++
             },
             onResize(e) {
                 const rowSize = e.offsetHeight * 0.8 / 23
                 e.style.fontSize = rowSize + 'px'
+            },
+            onColor(color) {
+                if(this.selection) {
+                    const code = `Alpha${color[0].toUpperCase()}${color.slice(1)}`
+                    this.data.splice(this.selectionIndex, 1, EP1_CODES[code])
+                }
             }
         },
         watch: {
@@ -103,18 +116,32 @@
 </script>
 
 <style lang="sass">
-    .ep1-editor {
+    .editor {
+        display: flex;
+        flex-flow: column;
         width: 500px;
         height: 405px;
         resize: both;
         overflow: auto;
         outline: none;
         border: 2px solid #999;
-        background-color: #000;
-        color: #fff;
-        font-weight: bold;
-        font-family: courier, monospace;
-        .editor-content {
+        .toolbar {
+            flex: 0 1 auto;
+            margin: 0;
+            text-align: right;
+            button {
+                font-weight: bold;
+                margin: 5px;
+                border: 1px solid #333;
+                background-color: #999;
+            }
+        }
+        .content {
+            flex: 1 1 auto;
+            background-color: #000;
+            color: #fff;
+            font-weight: bold;
+            font-family: courier, monospace;
             position: relative;
             height: 100%;
             overflow: hidden;

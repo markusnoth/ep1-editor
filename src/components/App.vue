@@ -1,12 +1,14 @@
 <template>
-    <div>
-        <div class="tool-bar">
-            <PageLoader style="display: inline-block;" @pageLoaded="updateData" />
-            <label><input type="checkbox" v-model="displayCodes" /> Display Codes</label>
-            <a href="#" @click.prevent="download" download="TeletextPage.ep1">Download EP1</button>
+    <div class="app">
+        <div class="toolbar">
+            <div>
+                <PageLoader style="display: inline-block;" @pageLoaded="updateData" />
+                <label><input type="checkbox" v-model="displayCodes" /> Display Codes</label>
+                <a href="#" @click.prevent="download" download="TeletextPage.ep1">Download EP1</button>
+            </div>
         </div>
         <Editor v-if="data" :value="data" @input="updateData" @selectionChanged="setSelection" :displayCodes="displayCodes" />
-        <div class="status-bar">
+        <div class="statusbar">
             <span v-if="selection">[{{ selection.row + 1 }} : {{ selection.col }}]</span>
         </div>
     </div>
@@ -51,10 +53,10 @@
         background-color: #d5d5cb;
         color: #333;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        .tool-bar {
+        .toolbar {
             margin-bottom: 10px;
         }
-        .status-bar {
+        .statusbar {
             margin-top: 10px;
             font-size: 0.6em;
         }
