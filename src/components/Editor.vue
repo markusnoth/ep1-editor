@@ -85,7 +85,17 @@
                             selection.row++;
                             selection.col = 1
                         }
-                     }
+                    },
+                    8: () => { // backspace
+                        if(e.metaKey) {
+                            data.splice(this.selectionIndex, 1)
+                            data.splice(46 + selection.row * 40 + 39, 0, EP1_CODES.Space)
+                        } else {
+                            data.splice(this.selectionIndex-1, 1)
+                            data.splice(46 + selection.row * 40 + 39, 0, EP1_CODES.Space)
+                            selection.col--
+                        }
+                    }
                 }
                 if(keyHandlers[e.keyCode]) {
                     e.preventDefault()
