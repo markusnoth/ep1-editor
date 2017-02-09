@@ -84,37 +84,9 @@
 </script>
 
 <style lang="sass">
-    $black: #000;
-    $red: #f00;
-    $green: #0c0;
-    $yellow: #ff0;
-    $blue: #00f;
-    $magenta: #f0f;
-    $cyan: #0ff;
-    $white: #fff;
-
-    .black { color: $black }
-    .red { color: $red }
-    .green { color: $green }
-    .yellow { color: $yellow }
-    .blue { color: $blue }
-    .magenta { color: $magenta }
-    .cyan { color: $cyan }
-    .white { color: $white }
-
-    .bg-red { background-color: $red }
-    .bg-green { background-color: $green }
-    .bg-yellow { background-color: $yellow }
-    .bg-blue { background-color: $blue }
-    .bg-magenta { background-color: $magenta }
-    .bg-cyan { background-color: $cyan }
-    .bg-white { background-color: $white }
-
     .ep1-editor {
         width: 500px;
-        min-width: 300px;
         height: 405px;
-        min-height: 200px;
         resize: both;
         overflow: auto;
         outline: none;
@@ -124,10 +96,13 @@
         font-weight: bold;
         font-family: courier, monospace;
         .editor-content {
+            position: relative;
             height: 100%;
             .row {
+                position: relative;
                 height: percentage(1/23);
                 .col {
+                    position: relative;
                     box-sizing: border-box;
                     display: inline-block;
                     text-align: center;
@@ -138,18 +113,6 @@
                     }
                     div.selected {
                         filter: invert(20%);
-                        input {
-                            width: 100%;
-                            padding: 0;
-                            background-color: transparent;
-                            border: none;
-                            outline: none;
-                            color: inherit;
-                            text-align: inherit;
-                            font-family: inherit;
-                            font-weight: inherit;
-                            font-size: inherit;
-                        }
                     }
                 }
             }

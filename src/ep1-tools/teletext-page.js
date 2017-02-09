@@ -47,7 +47,7 @@ export default function (ep1File) {
 					if (graphicsMode && ep1Code != EP1_CODES.NewBackground && holdGraphics && lastGraphic) {
 						rowData[col] = {
 							code: currentByte,
-							graphicContent: lastGraphic,
+							content: lastGraphic,
 							fgColor,
 							bgColor,
 							blink: blink && blink,
