@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const config = {
     entry: {
@@ -29,7 +30,10 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html'
-        })
+        }),
+        new CopyWebpackPlugin([
+            { from: './src/favicon.ico' }
+        ])
     ]
 }
 

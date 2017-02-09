@@ -36,3 +36,14 @@ export function isBase64(value) {
 export function getChar(data, lang) {
     return CHAR_TRANSLATIONS[data] ? CHAR_TRANSLATIONS[data][lang] : String.fromCharCode(data)
 }
+
+export function moveLine(data, row, offset, startIndex = 0) {
+    const sourceIndex = 46 + 40 * row + startIndex
+    let targetIndex = sourceIndex + 40 * offset
+    const length = 40 - startIndex
+    if(offset > 0) {
+        targetIndex -= length
+    }
+    data.splice(sourceIndex, 0, ...data.splice(targetIndex, length, ...data.splice(sourceIndex, length)))
+    return data
+}
