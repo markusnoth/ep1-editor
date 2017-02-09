@@ -1,12 +1,11 @@
 <template>
     <div :class="cssClass">
-        <input v-if="isSelected" :value="textContent" @input="onInput" v-select />
-        <span v-else-if="isCode && displayCode" class="code" :title="codeName">{{ codeShortName }}</span>
-        <span v-else-if="textContent">{{textContent}}</span>
-        <div v-else-if="graphicContent" class="graphic" :class="{ separated: seperatedGraphics }">
-            <div class="block" v-for="block in graphicContent" :style="block">&nbsp;</div>&nbsp;
+        <div v-if="graphicContent" class="graphic" :class="{ separated: seperatedGraphics }">
+            <div class="block" v-for="block in graphicContent" :style="block">&nbsp;</div>
         </div>
-        <span v-else>&nbsp;</span>
+        <input v-if="isSelected" :value="textContent" @input="onInput" v-select />
+        <span v-else-if="textContent">{{textContent}}</span>
+        <span v-else-if="isCode && displayCode" class="code" :title="codeName">{{ codeShortName }}</span>
     </div>
 </template>
 
@@ -39,7 +38,7 @@
                         })
                     }
                 }
-                return blocks
+                return blocks.length && blocks
             },
             cssClass() {
                 return {
@@ -87,12 +86,16 @@ $white: #fff;
             font-size: inherit;
         }
         .code {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
             background-color: #ccc;
             color: #000;
             font-size: 0.5em;
-            vertical-align: middle;
         }
         .graphic {
+            width: 100%;
             height: 100%;
             .block {
                 position: absolute;

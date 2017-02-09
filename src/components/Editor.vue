@@ -117,12 +117,14 @@
         .editor-content {
             position: relative;
             height: 100%;
+            overflow: hidden;
             .row {
                 position: relative;
                 height: percentage(1/23);
                 .col {
                     position: relative;
                     height: 100%;
+                    overflow: hidden;
                     width: percentage(1/40);
                     box-sizing: border-box;
                     display: inline-block;
