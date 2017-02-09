@@ -47,3 +47,10 @@ export function moveLine(data, row, offset, startIndex = 0) {
     data.splice(sourceIndex, 0, ...data.splice(targetIndex, length, ...data.splice(sourceIndex, length)))
     return data
 }
+
+export function insertLineBreak(data, row, col) {
+    const index = 46 + 40 * row + col
+    const fill = ' '.repeat(40-col).split('').map(() => EP1_CODES.Space)
+    data.splice(index, 0, ...fill)
+    data.splice(46 + 40 * 23, fill.length)
+}

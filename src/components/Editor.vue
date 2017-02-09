@@ -1,7 +1,7 @@
 <template>
     <div v-if="teletextPage" class="editor" tabindex="0" @keydown="onKey" v-resized="onResize">
         <div class="toolbar">
-            <button v-for="color in EP1_COLORS" @click="onColor(color)" :disabled="!selection" :title="color" :style="{color}">A</button>
+            <button v-for="color in EP1_COLORS" @click="insertColorCode(color)" :disabled="!selection" :title="color" :style="{color}">A</button>
         </div>
         <div class="content">
             <div class="row" v-for="(row, rowIdx) in teletextPage">
@@ -17,7 +17,7 @@
 
 <script>
     import elementResizeEvent from 'element-resize-event'
-    import { parse, moveLine, EP1_COLORS, EP1_CODES } from '../ep1-tools'
+    import { parse, moveLine, insertLineBreak, EP1_COLORS, EP1_CODES } from '../ep1-tools'
     import EditorItem from './EditorItem'
 
     export default {
@@ -62,23 +62,30 @@
                 this.$emit('selectionChanged', this.selection)
             },
             onKey (e) {
-                const { selection } = this
+                const { selection, data } = this
                 const keyHandlers = {
-                    37: () => { if(selection.col > 0) { this.selection.col-- } },
+                    37: () => { if(selection.col > 0) { selection.col-- } },
                     38: () => { // arrow up
                         if(selection.row > 0) { 
-                            if(e.metaKey || e.ctrlKey) { moveLine(this.data, selection.row, -1, selection.col) }
-                            this.selection.row--
+                            if(e.metaKey || e.ctrlKey) { moveLine(data, selection.row, -1, selection.col) }
+                            selection.row--
                         }
                     },
-                    39: () => { if( selection.col < 39) { this.selection.col++ } },
+                    39: () => { if( selection.col < 39) { selection.col++ } },
                     40: () => { // arrow down
-                        if( selection.row < 22) { 
-                            if(e.metaKey || e.ctrlKey) { moveLine(this.data, selection.row, 1, selection.col) }
-                            this.selection.row++ 
+                        if(selection.row < 22) { 
+                            if(e.metaKey || e.ctrlKey) { moveLine(data, selection.row, 1, selection.col) }
+                            selection.row++ 
                         }
                     },
-                    27: () => { this.selection = null } // esc
+                    27: () => { this.selection = null }, // esc
+                    13: () => { // enter
+                        if(selection.row < 22) {
+                            if(e.metaKey || e.ctrlKey || e.shiftKey) { insertLineBreak(data, selection.row, selection.col) }
+                            selection.row++;
+                            selection.col = 1
+                        }
+                     }
                 }
                 if(keyHandlers[e.keyCode]) {
                     e.preventDefault()
@@ -97,7 +104,7 @@
                 const rowSize = e.offsetHeight * 0.8 / 23
                 e.style.fontSize = rowSize + 'px'
             },
-            onColor(color) {
+            insertColorCode(color) {
                 if(this.selection) {
                     const code = `Alpha${color[0].toUpperCase()}${color.slice(1)}`
                     this.data.splice(this.selectionIndex, 1, EP1_CODES[code])
