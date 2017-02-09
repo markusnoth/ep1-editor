@@ -3,7 +3,7 @@
         <input v-if="isSelected" :value="textContent" @input="onInput" v-select />
         <span v-else-if="isCode && displayCode" class="code" :title="codeName">{{ codeShortName }}</span>
         <span v-else-if="textContent">{{textContent}}</span>
-        <div v-else-if="graphicContent" class="graphic" :class="{ separated: isSeparated }">
+        <div v-else-if="graphicContent" class="graphic" :class="{ separated: seperatedGraphics }">
             <div class="block" v-for="block in graphicContent" :style="block">&nbsp;</div>&nbsp;
         </div>
         <span v-else>&nbsp;</span>
@@ -16,7 +16,7 @@
     
     export default {
         name: 'EditorItem',
-        props: ['value','code','fgColor','bgColor','isSelected','displayCode'],
+        props: ['value','code','fgColor','bgColor','isSelected','displayCode','seperatedGraphics'],
         directives: {
             select(e) {
                 Vue.nextTick(() => {
@@ -90,6 +90,7 @@ $white: #fff;
             background-color: #ccc;
             color: #000;
             font-size: 0.5em;
+            vertical-align: middle;
         }
         .graphic {
             height: 100%;

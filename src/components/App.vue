@@ -3,6 +3,7 @@
         <div class="tool-bar">
             <PageLoader style="display: inline-block;" @pageLoaded="updateData" />
             <label><input type="checkbox" v-model="displayCodes" /> Display Codes</label>
+            <a href="#" @click.prevent="download" download="TeletextPage.ep1">Download EP1</button>
         </div>
         <Editor v-if="data" :value="data" @input="updateData" @selectionChanged="setSelection" :displayCodes="displayCodes" />
         <div class="status-bar">
@@ -28,6 +29,15 @@
             }),
             setSelection(selection) {
                 this.selection = selection
+            },
+            download(e) {
+                if(this.data) {
+                    const blob = new Blob([new Int8Array(this.data)], { type: 'application/ep1' })
+                    const link = document.createElement('a')
+                    link.setAttribute('href', URL.createObjectURL(blob))
+                    link.setAttribute('download', 'teletext_page.ep1')
+                    link.click()
+                }
             }
         },
         components: { Editor, PageLoader }
@@ -46,7 +56,6 @@
         }
         .status-bar {
             margin-top: 10px;
-            text-align: right;
             font-size: 0.6em;
         }
     }
