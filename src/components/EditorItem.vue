@@ -1,6 +1,6 @@
 <template>
     <div :class="cssClass">
-        <input v-if="isSelected" :value="content" @input="onInput" v-select />
+        <input v-if="isSelected" :value="textContent" @input="onInput" v-select />
         <span v-else-if="isCode && displayCode" class="code" :title="codeName">{{ codeShortName }}</span>
         <span v-else-if="textContent">{{textContent}}</span>
         <div v-else-if="graphicContent" class="graphic" :class="{ separated: isSeparated }">
