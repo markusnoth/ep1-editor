@@ -17,7 +17,7 @@
 
 <script>
     import elementResizeEvent from 'element-resize-event'
-    import { parse, moveLine, insertLineBreak, EP1_COLORS, EP1_CODES } from '../ep1-tools'
+    import { parse, moveLine, insertLineBreak, fillArray, EP1_COLORS, EP1_CODES } from '../ep1-tools'
     import EditorItem from './EditorItem'
 
     export default {
@@ -44,8 +44,11 @@
                 }
                 return null
             },
+            selectedRowStartIndex() {
+                return this.selection && 46 + this.selection.row * 40
+            },
             selectionIndex() {
-                return this.selection && 46 + this.selection.row * 40 + this.selection.col
+                return this.selectedRowStartIndex + this.selection.col
             }
         },
         directives: {
@@ -88,19 +91,25 @@
                     },
                     8: () => { // backspace
                         if(e.metaKey) { // delete in mac
-                            data.splice(this.selectionIndex, 1)
-                            data.splice(46 + selection.row * 40 + 39, 0, EP1_CODES.Space)
+                            this.delete()
+                        } else if (e.ctrlKey) { // delete line
+                            data.splice(this.selectedRowStartIndex, 40)
+                            data.splice(46 + 22 * 40, 0, ...fillArray(40))
                         } else {
-                            data.splice(this.selectionIndex-1, 1)
-                            data.splice(46 + selection.row * 40 + 39, 0, EP1_CODES.Space)
+                            this.delete(-1)
                             selection.col--
                         }
-                    }
+                    },
+                    46: () => this.delete()
                 }
                 if(keyHandlers[e.keyCode]) {
                     e.preventDefault()
                     keyHandlers[e.keyCode]()
                 }
+            },
+            delete(offset = 0) {
+                this.data.splice(this.selectionIndex + offset, 1)
+                this.data.splice(this.selectedRowStartIndex + 39, 0, EP1_CODES.Space)
             },
             onInput(row, col, value) {
                 if(typeof value === 'string') {

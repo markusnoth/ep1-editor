@@ -37,6 +37,13 @@ export function getChar(data, lang) {
     return CHAR_TRANSLATIONS[data] ? CHAR_TRANSLATIONS[data][lang] : String.fromCharCode(data)
 }
 
+export function fillArray(length, array = [], filler = EP1_CODES.Space) {
+    while(array.length < length) {
+        array.push(filler)
+    }
+    return array
+}
+
 export function moveLine(data, row, offset, startIndex = 0) {
     const sourceIndex = 46 + 40 * row + startIndex
     let targetIndex = sourceIndex + 40 * offset
@@ -48,8 +55,8 @@ export function moveLine(data, row, offset, startIndex = 0) {
 }
 
 export function insertLineBreak(data, row, col) {
-    const fill = ' '.repeat(40 - col).split('').map(() => EP1_CODES.Space)
-    let temp = data.splice(46 + 40 * row + col, fill.length, ...fill)
+    const fillLength = 40 - col
+    let temp = data.splice(46 + 40 * row + col, fillLength, ...fillArray(fillLength))
     for (++row; row < 23; row++) {
         const rowStartIndex = 46 + 40 * row
         // trim temp content
