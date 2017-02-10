@@ -24,7 +24,8 @@
         name: 'Editor',
         data() {
             return {
-                data: this.value,
+                parseError: null,
+                data: this.value.map(i => i),
                 selection: null,
                 EP1_COLORS
             }
@@ -35,14 +36,14 @@
         },
         computed: {
             teletextPage() {
-                if(this.data) {
-                    try {
-                        return parse(this.value)
-                    } catch (err) {
-                        console.error(err.message || err)
-                    }
+                try {
+                    const data = parse(this.value)
+                    this.parseError = null
+                    return data
+                } catch (err) {
+                    this.parseError = err.message || err
+                    return null
                 }
-                return null
             },
             selectedRowStartIndex() {
                 return this.selection && 46 + this.selection.row * 40
@@ -90,9 +91,7 @@
                         }
                     },
                     8: () => { // backspace
-                        if(e.metaKey) { // delete in mac
-                            this.delete()
-                        } else if (e.ctrlKey) { // delete line
+                        if (e.ctrlKey || e.metaKey) { // delete line
                             data.splice(this.selectedRowStartIndex, 40)
                             data.splice(46 + 22 * 40, 0, ...fillArray(40))
                         } else {
@@ -100,7 +99,10 @@
                             selection.col--
                         }
                     },
-                    46: () => this.delete()
+                    46: () => {
+                        console.log(e)
+                        this.delete()
+                    }
                 }
                 if(keyHandlers[e.keyCode]) {
                     e.preventDefault()
@@ -132,10 +134,12 @@
         },
         watch: {
             value(value) {
-                this.data = value
+                if(value !== this.data || value.length !== this.data.length || value.reduce((changed,v,i) => changed || v !== this.data[i]), false) {
+                    this.data = value.map(i => i)
+                }
             },
             data(data) {
-                this.$emit('input', data)
+                this.$emit('input', data.map(i => i))
             }
         }
     }

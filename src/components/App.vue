@@ -4,7 +4,7 @@
             <div>
                 <PageLoader style="display: inline-block;" @pageLoaded="updateData" />
                 <label><input type="checkbox" v-model="displayCodes" /> Display Codes</label>
-                <a href="#" @click.prevent="download" download="TeletextPage.ep1">Download EP1</button>
+                <a href="#" @click="download" download="TeletextPage.ep1" type="application/ep1" v-if="data">Download EP1</button>
             </div>
         </div>
         <Editor v-if="data" :value="data" @input="updateData" @selectionChanged="setSelection" :displayCodes="displayCodes" />
@@ -33,13 +33,8 @@
                 this.selection = selection
             },
             download(e) {
-                if(this.data) {
-                    const blob = new Blob([new Int8Array(this.data)], { type: 'application/ep1' })
-                    const link = document.createElement('a')
-                    link.setAttribute('href', URL.createObjectURL(blob))
-                    link.setAttribute('download', 'teletext_page.ep1')
-                    link.click()
-                }
+                const blob = new Blob([new Int8Array(this.data)], { type: 'application/ep1' })
+                e.target.setAttribute('href', URL.createObjectURL(blob))
             }
         },
         components: { Editor, PageLoader }
