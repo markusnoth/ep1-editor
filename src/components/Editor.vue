@@ -100,7 +100,6 @@
                         }
                     },
                     46: () => {
-                        console.log(e)
                         this.delete()
                     }
                 }
