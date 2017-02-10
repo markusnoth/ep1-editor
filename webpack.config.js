@@ -32,7 +32,8 @@ const config = {
             template: 'index.html'
         }),
         new CopyWebpackPlugin([
-            { from: './src/favicon.ico' }
+            { from: './src/favicon.ico' },
+            { from: './src/static', to: 'static' }
         ])
     ]
 }

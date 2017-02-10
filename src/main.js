@@ -24,7 +24,20 @@ const store = new Vuex.Store({
         },
         undo(state) {
             if(state.history.length) {
+                if(!state.history.redo) {
+                    state.history.redo = []
+                }
+                state.history.redo.push(state.data)
                 state.data = state.history.shift()
+            }
+        },
+        redo(state) {
+            if(state.history.redo) {
+                state.history.unshift(state.data)
+                state.data = state.history.redo.pop()
+                if(!state.history.redo.length) {
+                    state.history.redo = null
+                }
             }
         }
     }

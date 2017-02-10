@@ -2,13 +2,15 @@
     <div class="app">
         <div class="toolbar">
             <div>
-                <PageLoader style="display: inline-block;" @pageLoaded="updateData" />
-                <label><input type="checkbox" v-model="displayCodes" /> Display Codes</label>
-                <a href="#" @click="download" download="TeletextPage.ep1" type="application/ep1" v-if="data">Download EP1</button>
+                <PageLoader style="display: inline-block;" @pageLoaded="setData" />
+                <button :disabled="!data" @click="download"><img src="static/save.png"/></button>
+                <button :disabled="!history.length" @click="undo"><img src="static/undo.png" /></button>
+                <button :disabled="!history.redo" @click="redo"><img src="static/redo.png" /></button>
             </div>
         </div>
-        <Editor v-if="data" :value="data" @input="updateData" @selectionChanged="setSelection" :displayCodes="displayCodes" />
+        <Editor v-if="data" :value="data" @input="setData" @selectionChanged="setSelection" :displayCodes="displayCodes" />
         <div class="statusbar">
+            <label v-if="data"><input type="checkbox" v-model="displayCodes" /> Display Codes</label>
             <span v-if="selection">[{{ selection.row + 1 }} : {{ selection.col }}]</span>
         </div>
     </div>
@@ -24,17 +26,18 @@
             selection: null,
             displayCodes: false
         }),
-        computed: mapState(['data']),
+        computed: mapState(['data','history']),
         methods: {
-            ...mapMutations({
-                updateData: 'setData'
-            }),
+            ...mapMutations(['setData','undo','redo']),
             setSelection(selection) {
                 this.selection = selection
             },
-            download(e) {
+            download() {
                 const blob = new Blob([new Int8Array(this.data)], { type: 'application/ep1' })
-                e.target.setAttribute('href', URL.createObjectURL(blob))
+                const a = document.createElement('a')
+                a.setAttribute('href', URL.createObjectURL(blob))
+                a.setAttribute('download', 'TeletextPage.ep1')
+                a.click()
             }
         },
         components: { Editor, PageLoader }
@@ -50,6 +53,16 @@
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         .toolbar {
             margin-bottom: 10px;
+            button {
+                padding: 3px;
+                img {
+                    width: 16px;
+                    height: 16px;
+                }
+                &:disabled {
+                    opacity: 0.5;
+                }
+            }
         }
         .statusbar {
             margin-top: 10px;
