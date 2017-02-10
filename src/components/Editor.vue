@@ -87,7 +87,7 @@
                         }
                     },
                     8: () => { // backspace
-                        if(e.metaKey) {
+                        if(e.metaKey) { // delete in mac
                             data.splice(this.selectionIndex, 1)
                             data.splice(46 + selection.row * 40 + 39, 0, EP1_CODES.Space)
                         } else {

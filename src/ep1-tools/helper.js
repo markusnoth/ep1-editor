@@ -41,16 +41,25 @@ export function moveLine(data, row, offset, startIndex = 0) {
     const sourceIndex = 46 + 40 * row + startIndex
     let targetIndex = sourceIndex + 40 * offset
     const length = 40 - startIndex
-    if(offset > 0) {
+    if (offset > 0) { // if the content is moved down we have to adjust the target index
         targetIndex -= length
     }
     data.splice(sourceIndex, 0, ...data.splice(targetIndex, length, ...data.splice(sourceIndex, length)))
-    return data
 }
 
 export function insertLineBreak(data, row, col) {
-    const index = 46 + 40 * row + col
-    const fill = ' '.repeat(40-col).split('').map(() => EP1_CODES.Space)
-    data.splice(index, 0, ...fill)
-    data.splice(46 + 40 * 23, fill.length)
+    const fill = ' '.repeat(40 - col).split('').map(() => EP1_CODES.Space)
+    let temp = data.splice(46 + 40 * row + col, fill.length, ...fill)
+    for (++row; row < 23; row++) {
+        const rowStartIndex = 46 + 40 * row
+        // trim temp content
+        temp = temp.reduce((target, value) => {
+            if (value !== EP1_CODES.Space || target.length && target[target.length - 1] !== EP1_CODES.Space) {
+                target.push(value)
+            }
+            return target
+        }, [])
+        data.splice(rowStartIndex + 1, 0, ...temp)
+        temp = data.splice(rowStartIndex + col + temp.length, temp.length)
+    }
 }
