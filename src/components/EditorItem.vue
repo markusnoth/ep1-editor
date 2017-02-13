@@ -100,7 +100,7 @@ $white: #fff;
             .block {
                 position: absolute;
                 width: 50%;
-                height: percentage(1/3);
+                height: 33.4%;
             }
             &.separated .block {
                 width: 40%;
