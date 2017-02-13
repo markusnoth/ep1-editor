@@ -31,3 +31,9 @@
         }
     }
 </script>
+
+<style scoped="true">
+    input {
+        width: 50px;
+    }
+</style>
